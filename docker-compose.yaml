@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+    - POSTGRES_DB=url-shorter
+    - POSTGRES_USER=url-shorter
+    - POSTGRES_PASSWORD=url-shorter
+    ports:
+    - 5432:5432

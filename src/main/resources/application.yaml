@@ -1,0 +1,12 @@
+
+
+spring:
+  application:
+    name: url-shorter
+  datasource:
+    url: jdbc:postgresql://${PG_HOST:localhost}:${PG_PORT:5432}/${PG_DB:url-shorter}
+    username: ${PG_USER:url-shorter}
+    password: ${PG_PASS:url-shorter}
+
+hashids:
+  salt: ${ID_SALT:url-shorter}
