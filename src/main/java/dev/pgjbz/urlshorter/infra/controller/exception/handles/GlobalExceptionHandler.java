@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import dev.pgjbz.urlshorter.domain.exception.CreateResourceException;
 import dev.pgjbz.urlshorter.domain.exception.ResourceNotFoundException;
+import dev.pgjbz.urlshorter.domain.exception.UnknownErrorException;
 import dev.pgjbz.urlshorter.infra.controller.exception.ErrorBase;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -17,6 +19,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorBase> notFound(ResourceNotFoundException ex, HttpServletRequest request) {
         return buildError(ex, HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(UnknownErrorException.class)
+    public ResponseEntity<ErrorBase> unknownError(UnknownErrorException ex, HttpServletRequest request) {
+        return buildError(ex, HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(CreateResourceException.class)
+    public ResponseEntity<ErrorBase> resourceError(CreateResourceException ex, HttpServletRequest request) {
+        return buildError(ex, HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
     private ResponseEntity<ErrorBase> buildError(RuntimeException ex, HttpStatus status, HttpServletRequest request) {
