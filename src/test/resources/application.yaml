@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: url-shorter
+  datasource:
+    url: jdbc:tc:postgresql:15-alpine:///db
+    username: user
+    password: password
+
+hashids:
+  salt: url-shorter
