@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UnknownErrorException.class)
     public ResponseEntity<ErrorBase> unknownError(UnknownErrorException ex, HttpServletRequest request) {
-        return buildError(ex, HttpStatus.NOT_FOUND, request);
+        return buildError(ex, HttpStatus.SERVICE_UNAVAILABLE, request);
     }
 
     @ExceptionHandler(CreateResourceException.class)

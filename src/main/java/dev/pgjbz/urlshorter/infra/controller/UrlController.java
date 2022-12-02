@@ -1,6 +1,7 @@
 package dev.pgjbz.urlshorter.infra.controller;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.hashids.Hashids;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,14 +39,24 @@ public class UrlController {
     }
 
     @PostMapping(value = "/urls")
-    public ResponseEntity<UrlResponseDTO> create(@RequestBody final UrlRequestDTO url) {
-        final Url urlModel = urlService.create(new Url(null, url.url()));
+    public ResponseEntity<UrlResponseDTO> create(@RequestBody final UrlRequestDTO url,
+            @RequestHeader Map<String, String> headers) {
+        final Url urlModel = urlService.create(new Url(url.url()));
+        final String encodedId = encodeId(urlModel.id());
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                new UrlResponseDTO(encodeId(urlModel.id()), urlModel.url()));
+                new UrlResponseDTO(encodedId, urlModel.url(), urlModel.expire(), urlModel.ttl(),
+                        buildFinalUrl(headers, encodedId)));
     }
 
     private String encodeId(Long id) {
         return hashids.encode(id);
+    }
+
+    private String buildFinalUrl(Map<String, String> headers, String encodedId) {
+        if (headers.containsKey("host")) {
+            return headers.get("host") + "/%s".formatted(encodedId);
+        }
+        return "localhost:8080/%s".formatted(encodedId);
     }
 
     private long decodeId(final String id) {

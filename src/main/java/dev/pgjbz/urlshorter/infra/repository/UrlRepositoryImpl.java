@@ -1,5 +1,6 @@
 package dev.pgjbz.urlshorter.infra.repository;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,10 +29,10 @@ public class UrlRepositoryImpl implements UrlRepository {
     @Override
     public Url create(final Url url) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        final String insert = "insert into tb_url (url) values (:url)";
+        final String insert = "insert into tb_url (url, ttl) values (:url, 5)";
         final SqlParameterSource paramSource = new MapSqlParameterSource(Map.of("url", url.url()));
         if (jdbcTemplate.update(insert, paramSource, keyHolder, new String[] { "id" }) > 0)
-            return new Url(keyHolder.getKeyAs(Long.class), url.url());
+            return new Url(keyHolder.getKeyAs(Long.class), url.url(), LocalDateTime.now(), true, 5);
         final String message = "error on create resource with params: %s".formatted(url);
         log.error(message);
         throw new CreateResourceException(message);
@@ -43,19 +44,27 @@ public class UrlRepositoryImpl implements UrlRepository {
         final String selectById = """
                 select
                     id,
-                    url
+                    url,
+                    created_at,
+                    expire,
+                    ttl
                 from
-                    tb_url
+                    tb_url 
                 where
                     id = :id
                 """;
         try {
             return Optional.of(jdbcTemplate.queryForObject(selectById, paramSource,
-                    (rs, rowNum) -> new Url(rs.getLong("id"), rs.getString("url"))));
+                    (rs, rowNum) -> new Url(rs.getLong("id"),
+                            rs.getString("url"),
+                            rs.getTimestamp("created_at").toLocalDateTime(),
+                            rs.getBoolean("expire"),
+                            rs.getInt("ttl"))));
         } catch (EmptyResultDataAccessException e) {
             log.error("no resource founded with id: {}", id);
         } catch (Exception e) {
-            throw new UnknownErrorException(e);
+            log.error("error on select url: {}", e.getMessage(), e);
+            throw new UnknownErrorException("unknown error has occurred");
         }
         return Optional.empty();
     }

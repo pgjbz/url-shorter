@@ -20,7 +20,7 @@ public final class UrlServiceImpl implements UrlService {
     @Override
     public Url findUrlById(final Long id) {
         return urlRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("url with id %s not found".formatted(id)));
+                .orElseThrow(() -> new ResourceNotFoundException("url not found"));
     }
 
 }
