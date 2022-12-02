@@ -21,9 +21,9 @@ public class UrlRepositoryITTest {
     @Sql({ "/data/clean.sql", "/data/create.sql" })
     void testCreateNewUrl() {
         final var url = "https://google.com";
-        var urlObject = new Url(null, url);
+        var urlObject = new Url(null, url, null, true, 5);
         urlObject = urlRepository.create(urlObject);
-        assertEquals(urlObject, new Url(1L, url), "expected equals object");
+        assertEquals(urlObject, new Url(1L, url, null, true, 5), "expected equals object");
     }
 
     @Test
@@ -31,7 +31,7 @@ public class UrlRepositoryITTest {
     void testFindById() {
         final var url = "https://google.com";
         final var urlObject = urlRepository.findById(1L).get();
-        assertEquals(urlObject, new Url(1L, url), "expected equals object");
+        assertEquals(urlObject, new Url(1L, url, null, true, 5), "expected equals object");
     }
 
 }
