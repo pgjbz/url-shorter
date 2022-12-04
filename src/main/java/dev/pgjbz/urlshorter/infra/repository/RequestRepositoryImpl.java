@@ -17,16 +17,16 @@ public class RequestRepositoryImpl implements RequestRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public boolean save(String headers) {
-        final String insert = "insert into tb_request(headers) values (:headers::json)";
-        Map<String, Object> values = Map.of("headers", headers);
+    public boolean save(Long urlId, String headers) {
+        final String insert = "insert into tb_request(url_id, headers) values (:urlId, :headers::json)";
+        Map<String, Object> values = Map.of("headers", headers, "urlId", urlId);
         try {
             log.info("inserting headers: {}", headers);
             return jdbcTemplate.update(insert, values) > 0;
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("error on insert request headers: {}", e.getMessage(), e);
         }
         return false;
     }
-    
+
 }

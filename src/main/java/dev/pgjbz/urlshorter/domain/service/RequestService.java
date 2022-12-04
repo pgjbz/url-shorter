@@ -1,7 +1,7 @@
 package dev.pgjbz.urlshorter.domain.service;
 
-import java.util.Map;
+import dev.pgjbz.urlshorter.domain.model.Request;
 
 public sealed interface RequestService permits RequestServiceImpl {
-    void save(Map<String, String> headers);
+    void save(Request request);
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.pgjbz.urlshorter.domain.exception.ResourceNotFoundException;
+import dev.pgjbz.urlshorter.domain.model.Request;
 import dev.pgjbz.urlshorter.domain.model.Url;
 import dev.pgjbz.urlshorter.domain.service.RequestService;
 import dev.pgjbz.urlshorter.domain.service.UrlService;
@@ -36,8 +37,8 @@ public class UrlController {
     public void findUrl(@PathVariable(value = "id") final String id, final HttpServletResponse response,
             @RequestHeader Map<String, String> headers)
             throws IOException {
-        requestService.save(headers);
         final long idDecoded = decodeId(id);
+        requestService.save(new Request(headers, idDecoded));
         final Url url = urlService.findUrlById(idDecoded);
         response.sendRedirect(url.url());
     }
