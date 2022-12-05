@@ -42,16 +42,17 @@ public class UrlRepositoryImpl implements UrlRepository {
     public Optional<Url> findById(final Long id) {
         final SqlParameterSource paramSource = new MapSqlParameterSource(Map.of("id", id));
         final String selectById = """
-                select
-                    id,
-                    url,
-                    created_at,
-                    expire,
-                    ttl
+                    select
+                    u.id,
+                    u.url,
+                    u.created_at,
+                    u.expire,
+                    u.ttl
                 from
-                    tb_url 
+                    tb_url u
                 where
-                    id = :id
+                    u.id = :id
+                    and u.created_at  >= (current_timestamp - make_interval(days => u.ttl))
                 """;
         try {
             return Optional.of(jdbcTemplate.queryForObject(selectById, paramSource,
