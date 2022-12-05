@@ -11,6 +11,7 @@ import dev.pgjbz.urlshorter.domain.exception.CreateResourceException;
 import dev.pgjbz.urlshorter.domain.exception.ResourceNotFoundException;
 import dev.pgjbz.urlshorter.domain.exception.UnknownErrorException;
 import dev.pgjbz.urlshorter.infra.controller.exception.ErrorBase;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
@@ -29,6 +30,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CreateResourceException.class)
     public ResponseEntity<ErrorBase> resourceError(CreateResourceException ex, HttpServletRequest request) {
         return buildError(ex, HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    @ExceptionHandler(RequestNotPermitted.class)
+    public ResponseEntity<ErrorBase> rateLimite(RequestNotPermitted ex, HttpServletRequest request) {
+        return buildError(ex, HttpStatus.I_AM_A_TEAPOT, request);
     }
 
     private ResponseEntity<ErrorBase> buildError(RuntimeException ex, HttpStatus status, HttpServletRequest request) {

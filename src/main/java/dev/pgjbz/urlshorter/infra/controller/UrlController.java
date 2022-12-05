@@ -21,6 +21,8 @@ import dev.pgjbz.urlshorter.domain.service.RequestService;
 import dev.pgjbz.urlshorter.domain.service.UrlService;
 import dev.pgjbz.urlshorter.infra.dto.request.UrlRequestDTO;
 import dev.pgjbz.urlshorter.infra.dto.response.UrlResponseDTO;
+import io.github.resilience4j.ratelimiter.RateLimiter;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -32,10 +34,11 @@ public class UrlController {
     private final UrlService urlService;
     private final Hashids hashids;
     private final RequestService requestService;
+    private final RateLimiterRegistry rateLimiterRegistry;
 
     @GetMapping(value = "/{id}")
     public void findUrl(@PathVariable(value = "id") final String id, final HttpServletResponse response,
-            @RequestHeader Map<String, String> headers)
+            @RequestHeader final Map<String, String> headers)
             throws IOException {
         final long idDecoded = decodeId(id);
         requestService.save(new Request(headers, idDecoded));
@@ -45,8 +48,9 @@ public class UrlController {
 
     @PostMapping(value = "/urls")
     public ResponseEntity<UrlResponseDTO> create(@RequestBody final UrlRequestDTO url,
-            @RequestHeader Map<String, String> headers) {
-        final Url urlModel = urlService.create(new Url(url.url()));
+            @RequestHeader final Map<String, String> headers) {
+        final RateLimiter rateLimiter = rateLimiterRegistry.rateLimiter("create-url");
+        final Url urlModel = rateLimiter.executeSupplier(() -> urlService.create(new Url(url.url())));
         final String encodedId = encodeId(urlModel.id());
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new UrlResponseDTO(encodedId, urlModel.url(), urlModel.expire(), urlModel.ttl(),

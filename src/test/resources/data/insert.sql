@@ -1,1 +1,1 @@
-insert into tb_url(id, url) values (1, 'https://google.com');
+insert into tb_url(id, url, ttl) values (1, 'https://google.com', 100);
