@@ -31,3 +31,10 @@ Build binary:
 ```shell
 mvn native:compile -Pnative
 ```
+
+Goals:
+
+- [X] Short URL with Opaque id
+- [-] Limit rate
+- [X] Add Swagger
+- [ ] k6 tests
