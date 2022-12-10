@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import dev.pgjbz.urlshorter.domain.exception.CreateResourceException;
+import dev.pgjbz.urlshorter.domain.exception.InvalidUrlException;
 import dev.pgjbz.urlshorter.domain.exception.ResourceNotFoundException;
 import dev.pgjbz.urlshorter.domain.exception.UnknownErrorException;
 import dev.pgjbz.urlshorter.infra.controller.exception.ErrorBase;
@@ -34,7 +35,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RequestNotPermitted.class)
     public ResponseEntity<ErrorBase> rateLimite(RequestNotPermitted ex, HttpServletRequest request) {
-        return buildError(ex, HttpStatus.I_AM_A_TEAPOT, request);
+        return buildError(ex, HttpStatus.SERVICE_UNAVAILABLE, request);
+    }
+
+    @ExceptionHandler(InvalidUrlException.class)
+    public ResponseEntity<ErrorBase> invalidUrl(InvalidUrlException ex, HttpServletRequest request) {
+        return buildError(ex, HttpStatus.BAD_REQUEST, request);
     }
 
     private ResponseEntity<ErrorBase> buildError(RuntimeException ex, HttpStatus status, HttpServletRequest request) {

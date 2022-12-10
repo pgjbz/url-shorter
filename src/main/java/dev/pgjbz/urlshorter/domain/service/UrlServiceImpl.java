@@ -1,5 +1,8 @@
 package dev.pgjbz.urlshorter.domain.service;
 
+import java.util.Objects;
+
+import dev.pgjbz.urlshorter.domain.exception.InvalidUrlException;
 import dev.pgjbz.urlshorter.domain.exception.ResourceNotFoundException;
 import dev.pgjbz.urlshorter.domain.model.Url;
 import dev.pgjbz.urlshorter.domain.repository.UrlRepository;
@@ -14,7 +17,9 @@ public final class UrlServiceImpl implements UrlService {
 
     @Override
     public Url create(final Url url) {
-        return urlRepository.create(url);
+        if(Objects.nonNull(url.url()) && !url.url().isBlank())
+            return urlRepository.create(url);
+        throw new InvalidUrlException("url cannot be null or empyt");
     }
 
     @Override
