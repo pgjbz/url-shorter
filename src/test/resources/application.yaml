@@ -8,3 +8,8 @@ spring:
 
 hashids:
   salt: url-shorter
+
+ratelimit:
+  timeout-duration: 500
+  refresh-period: 100
+  requests-per-period: 50
