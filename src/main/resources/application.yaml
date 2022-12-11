@@ -12,6 +12,6 @@ hashids:
   salt: ${ID_SALT:url-shorter}
 
 ratelimit:
-  timeout-duration: 500
-  refresh-period: 100
-  requests-per-period: 50
+  timeout-duration: ${RATE_LIMIT_DURATION:500}
+  refresh-period: ${RATE_LIMIT_REFRESH_PERIOD:100}
+  requests-per-period: ${RATE_LIMIT_REQUESTS_PER_PERIOD:50}

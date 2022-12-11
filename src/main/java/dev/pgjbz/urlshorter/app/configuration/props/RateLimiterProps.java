@@ -1,4 +1,4 @@
-package dev.pgjbz.urlshorter.infra.configuration.props;
+package dev.pgjbz.urlshorter.app.configuration.props;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;

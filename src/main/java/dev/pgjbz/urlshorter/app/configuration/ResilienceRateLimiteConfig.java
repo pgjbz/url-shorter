@@ -1,11 +1,11 @@
-package dev.pgjbz.urlshorter.infra.configuration;
+package dev.pgjbz.urlshorter.app.configuration;
 
 import java.time.Duration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import dev.pgjbz.urlshorter.infra.configuration.props.RateLimiterProps;
+import dev.pgjbz.urlshorter.app.configuration.props.RateLimiterProps;
 import io.github.resilience4j.ratelimiter.RateLimiterConfig;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 

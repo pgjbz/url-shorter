@@ -1,4 +1,4 @@
-package dev.pgjbz.urlshorter.infra.controller.exception;
+package dev.pgjbz.urlshorter.app.http.controller.exception;
 
 import java.time.Instant;
 

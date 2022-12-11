@@ -1,4 +1,4 @@
-package dev.pgjbz.urlshorter.infra.dto.response;
+package dev.pgjbz.urlshorter.app.http.dto.response;
 
 public record UrlResponseDTO(
     String id, 

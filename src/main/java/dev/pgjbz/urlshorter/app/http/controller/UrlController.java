@@ -1,4 +1,4 @@
-package dev.pgjbz.urlshorter.infra.controller;
+package dev.pgjbz.urlshorter.app.http.controller;
 
 import java.io.IOException;
 import java.util.Map;
@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.pgjbz.urlshorter.app.http.dto.request.UrlRequestDTO;
+import dev.pgjbz.urlshorter.app.http.dto.response.UrlResponseDTO;
 import dev.pgjbz.urlshorter.domain.exception.ResourceNotFoundException;
 import dev.pgjbz.urlshorter.domain.model.Request;
 import dev.pgjbz.urlshorter.domain.model.Url;
 import dev.pgjbz.urlshorter.domain.service.RequestService;
 import dev.pgjbz.urlshorter.domain.service.UrlService;
-import dev.pgjbz.urlshorter.infra.dto.request.UrlRequestDTO;
-import dev.pgjbz.urlshorter.infra.dto.response.UrlResponseDTO;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,4 +1,4 @@
-package dev.pgjbz.urlshorter.infra.controller.exception.handles;
+package dev.pgjbz.urlshorter.app.http.controller.exception.handles;
 
 import java.time.Instant;
 
@@ -7,11 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import dev.pgjbz.urlshorter.app.http.controller.exception.ErrorBase;
 import dev.pgjbz.urlshorter.domain.exception.CreateResourceException;
 import dev.pgjbz.urlshorter.domain.exception.InvalidUrlException;
 import dev.pgjbz.urlshorter.domain.exception.ResourceNotFoundException;
 import dev.pgjbz.urlshorter.domain.exception.UnknownErrorException;
-import dev.pgjbz.urlshorter.infra.controller.exception.ErrorBase;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import jakarta.servlet.http.HttpServletRequest;
 
