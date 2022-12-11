@@ -21,7 +21,7 @@ public class UrlControllerITTest {
 
     @Test
     @SuppressWarnings("all")
-    @Sql({ "/data/drop.sql", "/data/create.sql"})
+    @Sql({ "/data/drop.sql", "/data/create.sql" })
     void testCreateUrlExpectedCreateShorthenUrl() {
         final var url = "https://google.com";
         final var urlRequest = new UrlRequestDTO(url);
@@ -34,11 +34,29 @@ public class UrlControllerITTest {
 
     @Test
     @SuppressWarnings("all")
+    @Sql({ "/data/drop.sql", "/data/create.sql" })
+    void testCreateUrlExpectedBadRequest() {
+        final var urlRequest = new UrlRequestDTO(null);
+        final var urlResponse = restTemplate.postForEntity("/urls", urlRequest, UrlResponseDTO.class);
+        assertEquals(HttpStatus.BAD_REQUEST, urlResponse.getStatusCode(), "expected BAD REQUEST http code");
+    }
+
+    @Test
+    @SuppressWarnings("all")
     @Sql({ "/data/drop.sql", "/data/create.sql", "/data/insert.sql" })
     void testFindUrl() {
         final var path = "/Gp";
         final var response = restTemplate.getForEntity(path, String.class);
         assertEquals(HttpStatus.FOUND, response.getStatusCode(), "expected CREATED http code");
+    }
+
+    @Test
+    @SuppressWarnings("all")
+    @Sql({ "/data/drop.sql", "/data/create.sql" })
+    void testFindUrlNotFound() {
+        final var path = "/Gp";
+        final var response = restTemplate.getForEntity(path, String.class);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode(), "expected NOT FOUND http code");
     }
 
 }
