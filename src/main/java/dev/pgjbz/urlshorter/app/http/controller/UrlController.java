@@ -3,75 +3,64 @@ package dev.pgjbz.urlshorter.app.http.controller;
 import java.io.IOException;
 import java.util.Map;
 
-import org.hashids.Hashids;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import dev.pgjbz.urlshorter.app.http.dto.request.UrlRequestDTO;
 import dev.pgjbz.urlshorter.app.http.dto.response.UrlResponseDTO;
-import dev.pgjbz.urlshorter.domain.exception.ResourceNotFoundException;
-import dev.pgjbz.urlshorter.domain.model.Request;
-import dev.pgjbz.urlshorter.domain.model.Url;
-import dev.pgjbz.urlshorter.domain.service.RequestService;
-import dev.pgjbz.urlshorter.domain.service.UrlService;
-import io.github.resilience4j.ratelimiter.RateLimiter;
-import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 
-@RestController
-@RequestMapping(value = "/")
-@RequiredArgsConstructor
-public class UrlController {
+public interface UrlController {
+    @PostMapping(value = "/urls")
+    @Operation(description = "create new short url", responses = {
+            @ApiResponse(responseCode = "201", description = "create new url", useReturnTypeSchema = true),
+            @ApiResponse(responseCode = "400", description = "invalid url schema", content = {
+                    @Content(mediaType = "application/json", examples = @ExampleObject(value = """
+                            {
+                                "message": "Bad request",
+                                "error": "Bad request",
+                                "instant": "2022-01-01T00:00:00",
+                                "path": "/urls",
+                                "status": "400"
+                            }
+                            """)) }),
+            @ApiResponse(responseCode = "429", description = "exceed create limit in interval", useReturnTypeSchema = false, content = {
+                    @Content(mediaType = "application/json", examples = @ExampleObject(value = """
+                            {
+                                "message": "Too many requests",
+                                "error": "Too many requests",
+                                "instant": "2022-01-01T00:00:00",
+                                "path": "/urls",
+                                "status": "429"
+                            }
+                            """)) }),
+            @ApiResponse(responseCode = "422", description = "fail to save url", useReturnTypeSchema = false, content = {
+                    @Content(mediaType = "application/json", examples = @ExampleObject(value = """
+                            {
+                                "message": "Unprocessable entity",
+                                "error": "Unprocessable entity",
+                                "instant": "2022-01-01T00:00:00",
+                                "path": "/urls",
+                                "status": "422"
+                            }
+                            """)) })
+    })
 
-    private final UrlService urlService;
-    private final Hashids hashids;
-    private final RequestService requestService;
-    private final RateLimiterRegistry rateLimiterRegistry;
+    ResponseEntity<UrlResponseDTO> create(@RequestBody final UrlRequestDTO url,
+            @RequestHeader final Map<String, String> headers);
 
     @GetMapping(value = "/{id}")
-    public void findUrl(@PathVariable(value = "id") final String id, final HttpServletResponse response,
-            @RequestHeader final Map<String, String> headers)
-            throws IOException {
-        final long idDecoded = decodeId(id);
-        requestService.save(new Request(headers, idDecoded));
-        final Url url = urlService.findUrlById(idDecoded);
-        response.sendRedirect(url.url());
-    }
-
-    @PostMapping(value = "/urls")
-    public ResponseEntity<UrlResponseDTO> create(@RequestBody final UrlRequestDTO url,
-            @RequestHeader final Map<String, String> headers) {
-        final RateLimiter rateLimiter = rateLimiterRegistry.rateLimiter("create-url");
-        final Url urlModel = rateLimiter.executeSupplier(() -> urlService.create(new Url(url.url())));
-        final String encodedId = encodeId(urlModel.id());
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new UrlResponseDTO(encodedId, urlModel.url(), urlModel.expire(), urlModel.ttl(),
-                        buildFinalUrl(headers, encodedId)));
-    }
-
-    private String encodeId(Long id) {
-        return hashids.encode(id);
-    }
-
-    private String buildFinalUrl(Map<String, String> headers, String encodedId) {
-        if (headers.containsKey("host")) {
-            return headers.get("host") + "/%s".formatted(encodedId);
-        }
-        return "localhost:8080/%s".formatted(encodedId);
-    }
-
-    private long decodeId(final String id) {
-        final long[] decodedeIds = hashids.decode(id);
-        if (decodedeIds.length != 1)
-            throw new ResourceNotFoundException("url with id %s not found".formatted(id));
-        return decodedeIds[0];
-    }
+    @Operation(description = "find url by id", responses = {
+            @ApiResponse(responseCode = "302", description = "found url and redirect"),
+            @ApiResponse(responseCode = "404", description = "url not found") })
+    void findUrl(@PathVariable(value = "id") final String id, final HttpServletResponse response,
+            @RequestHeader final Map<String, String> headers) throws IOException;
 }

@@ -32,9 +32,11 @@ Build binary:
 mvn native:compile -Pnative
 ```
 
+Access: localhost:8080/swagger-ui.html to see swagger
+
 Goals:
 
 - [X] Short URL with Opaque id
-- [-] Limit rate
+- [X] Limit rate
 - [X] Add Swagger
 - [ ] k6 tests

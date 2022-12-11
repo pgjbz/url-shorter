@@ -1,8 +1,9 @@
-
-
 spring:
   application:
-    name: url-shorter
+    name: Url Shorter
+    version: 1.0
+    author: Paulo Gabriel Justino Bezerra
+    contact: contact@pgjbz.dev
   datasource:
     url: jdbc:postgresql://${PG_HOST:localhost}:${PG_PORT:5432}/${PG_DB:url-shorter}
     username: ${PG_USER:url-shorter}
