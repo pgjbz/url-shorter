@@ -25,8 +25,8 @@ public class RequestRepositoryImpl implements RequestRepository {
             return jdbcTemplate.update(insert, values) > 0;
         } catch (Exception e) {
             log.error("error on insert request headers: {}", e.getMessage(), e);
+            throw e;
         }
-        return false;
     }
 
 }
