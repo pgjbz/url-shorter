@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import dev.pgjbz.urlshorter.domain.exception.InvalidUrlException;
+import dev.pgjbz.urlshorter.domain.exception.ResourceNotFoundException;
 import dev.pgjbz.urlshorter.domain.model.Url;
 import dev.pgjbz.urlshorter.domain.repository.UrlRepository;
 
@@ -43,6 +46,31 @@ public class UrlServiceTest {
     void testSaveUrlExpectedInvalidUrlException(Url url) {
         InvalidUrlException exception = assertThrows(InvalidUrlException.class, () -> urlService.create(url));
         assertEquals("url cannot be null or empyt", exception.getMessage());
+    }
+
+    @Test
+    void testFindUrlByIdExpectedReturnUrl() {
+        final var id = 1L;
+        final var url = new Url("http://foo.com");
+        when(urlRepository.findById(id)).thenReturn(Optional.of(url));
+
+        final var result = assertDoesNotThrow(() -> urlService.findUrlById(id));
+
+        verify(urlRepository).findById(id);
+
+        assertEquals(url, result);
+    }
+
+    @Test
+    void testFindUrlByIdExpectedResourceNotFoundException() {
+        final var id = 1L;
+        when(urlRepository.findById(id)).thenReturn(Optional.empty());
+
+        final ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> urlService.findUrlById(id));
+
+        verify(urlRepository).findById(id);
+
+        assertEquals("url not found", exception.getMessage());
     }
 
     private static Stream<Arguments> invalidUrlSource() {
