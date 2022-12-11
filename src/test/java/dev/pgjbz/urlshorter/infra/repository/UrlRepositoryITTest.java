@@ -18,7 +18,7 @@ public class UrlRepositoryITTest {
     private UrlRepository urlRepository;
 
     @Test
-    @Sql({ "/data/clean.sql", "/data/create.sql" })
+    @Sql({ "/data/drop.sql", "/data/create.sql" })
     void testCreateNewUrl() {
         final var url = "https://google.com";
         var urlObject = new Url(null, url, null, true, 5);
@@ -27,7 +27,7 @@ public class UrlRepositoryITTest {
     }
 
     @Test
-    @Sql({ "/data/clean.sql", "/data/create.sql", "/data/insert.sql" })
+    @Sql({ "/data/drop.sql", "/data/create.sql", "/data/insert.sql" })
     void testFindById() {
         final var url = "https://google.com";
         final var urlObject = urlRepository.findById(1L).get();

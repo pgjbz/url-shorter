@@ -1,9 +1,7 @@
 package dev.pgjbz.urlshorter.infra.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,20 +21,20 @@ public class UrlControllerITTest {
 
     @Test
     @SuppressWarnings("all")
+    @Sql({ "/data/drop.sql", "/data/create.sql"})
     void testCreateUrlExpectedCreateShorthenUrl() {
         final var url = "https://google.com";
         final var urlRequest = new UrlRequestDTO(url);
         final var urlResponse = restTemplate.postForEntity("/urls", urlRequest, UrlResponseDTO.class);
         final var urlResponseBody = urlResponse.getBody();
         assertEquals(HttpStatus.CREATED, urlResponse.getStatusCode(), "expected CREATED http code");
-        assertNotEquals("1", urlResponseBody.id(), "id cannot be equals '1', because cannot be incremental id");
+        assertEquals("Gp", urlResponseBody.id(), "id have to be equals to 'Gp', because cannot be incremental id");
         assertEquals(url, urlResponseBody.url());
     }
 
     @Test
     @SuppressWarnings("all")
-    @Disabled("maybe cannot find because hashid")
-    @Sql({ "/data/clean.sql", "/data/create.sql", "/data/insert.sql" })
+    @Sql({ "/data/drop.sql", "/data/create.sql", "/data/insert.sql" })
     void testFindUrl() {
         final var path = "/Gp";
         final var response = restTemplate.getForEntity(path, String.class);
