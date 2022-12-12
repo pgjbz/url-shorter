@@ -34,6 +34,25 @@ mvn native:compile -Pnative
 
 Access: localhost:8080/swagger-ui.html to see swagger
 
+Configuration:
+
+Environment Variables:
+
+```bash
+# database config
+PG_HOST=host_postgres
+PG_PORT=port_postgres
+PG_DB=database_name
+PG_USER=database_username
+PG_PASS=database_password
+#hashids config
+ID_SALT=hashids_salt
+#rate limiter
+RATE_LIMIT_DURATION=500 #in ms
+RATE_LIMIT_REFRESH_PERIOD=100 #in ms
+RATE_LIMIT_REQUESTS_PER_PERIOD=50 #requests in refresh period
+```
+
 Goals:
 
 - [X] Short URL with Opaque id
