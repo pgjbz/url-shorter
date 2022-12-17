@@ -32,6 +32,12 @@ Build binary:
 mvn native:compile -Pnative
 ```
 
+If you want you can run on docker:
+
+```shell
+docker compose -f docker-compose.yaml up
+```
+
 Access: localhost:8080/swagger-ui.html to see swagger
 
 Configuration:

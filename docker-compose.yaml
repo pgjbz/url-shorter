@@ -23,6 +23,7 @@ services:
     - PG_DB=url-shorter
     - PG_USER=url-shorter
     - PG_PASS=url-shorter
+    - ID_SALT=ultramegablastpowerfullsalt
     ports:
     - "8080:8080"
     networks:
