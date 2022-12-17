@@ -53,9 +53,19 @@ RATE_LIMIT_REFRESH_PERIOD=100 #in ms
 RATE_LIMIT_REQUESTS_PER_PERIOD=50 #requests in refresh period
 ```
 
+To run K6 tests just run:
+
+```bash
+docker compose -f docker-compose-k6.yaml up
+```
+
+The docker compose will build image, start grafana, influxdb, postgresql, application and run k6 tests.
+
+In browser access: http://localhost:3000/d/k6/k6-load-testing-results to see stress test dashboard
+
 Goals:
 
 - [X] Short URL with Opaque id
 - [X] Limit rate
 - [X] Add Swagger
-- [ ] k6 tests
+- [X] k6 tests
