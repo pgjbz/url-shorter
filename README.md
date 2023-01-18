@@ -75,3 +75,7 @@ Goals:
 - [X] Limit rate
 - [X] Add Swagger
 - [X] k6 tests
+- [ ] Security
+- [ ] Link URL to user
+- [ ] Fetch all url from user
+- [ ] Delete url
