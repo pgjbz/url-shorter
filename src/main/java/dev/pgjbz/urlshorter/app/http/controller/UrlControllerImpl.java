@@ -1,6 +1,7 @@
 package dev.pgjbz.urlshorter.app.http.controller;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Map;
 
 import org.hashids.Hashids;
@@ -31,6 +32,8 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Url", description = "Operation to url shorter")
 public class UrlControllerImpl implements UrlController {
 
+    private static final String LOCAL_HOST = InetAddress.getLoopbackAddress().getHostName();
+
     private final UrlService urlService;
     private final Hashids hashids;
     private final RequestService requestService;
@@ -59,10 +62,11 @@ public class UrlControllerImpl implements UrlController {
     }
 
     private String buildFinalUrl(Map<String, String> headers, String encodedId) {
+        
         if (headers.containsKey("host")) {
             return headers.get("host") + "/%s".formatted(encodedId);
         }
-        return "localhost:8080/%s".formatted(encodedId);
+        return "%s/%s".formatted(LOCAL_HOST, encodedId);
     }
 
     private long decodeId(final String id) {
