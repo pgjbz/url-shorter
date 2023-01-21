@@ -8,12 +8,12 @@ import jakarta.validation.constraints.NotNull;
 
 @Validated
 @ConfigurationProperties(prefix = "hashids")
-public record HashidsConfig(
+public record HashidsProps(
         @NotNull String salt) {
 
     @SuppressWarnings("all")
     @ConstructorBinding
-    public HashidsConfig {
+    public HashidsProps {
 
     }
 }
