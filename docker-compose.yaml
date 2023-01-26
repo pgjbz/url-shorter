@@ -14,6 +14,7 @@ services:
     - app
   
   application:
+    container_name: url-shorter
     build: 
       context: .
       dockerfile: ./Dockerfile
@@ -30,7 +31,6 @@ services:
     - app
     depends_on:
     - postgres
-
 networks:
   app:
   
