@@ -1,7 +1,6 @@
 package dev.pgjbz.urlshorter.app.http.controller;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.Map;
 
 import org.hashids.Hashids;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.pgjbz.urlshorter.app.http.dto.request.UrlRequestDTO;
-import dev.pgjbz.urlshorter.app.http.dto.response.UrlResponseDTO;
 import dev.pgjbz.urlshorter.domain.exception.ResourceNotFoundException;
 import dev.pgjbz.urlshorter.domain.model.Request;
 import dev.pgjbz.urlshorter.domain.model.Url;
@@ -32,8 +30,6 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "Url", description = "Operation to url shorter")
 public class UrlControllerImpl implements UrlController {
 
-    private static final String LOCAL_HOST = InetAddress.getLoopbackAddress().getHostName();
-
     private final UrlService urlService;
     private final Hashids hashids;
     private final RequestService requestService;
@@ -47,26 +43,12 @@ public class UrlControllerImpl implements UrlController {
         response.sendRedirect(url.url());
     }
 
-    public ResponseEntity<UrlResponseDTO> create(@RequestBody final UrlRequestDTO url,
+    public ResponseEntity<Url> create(@RequestBody final UrlRequestDTO url,
             @RequestHeader final Map<String, String> headers) {
         final RateLimiter rateLimiter = rateLimiterRegistry.rateLimiter("create-url");
         final Url urlModel = rateLimiter.executeSupplier(() -> urlService.create(new Url(url.url())));
-        final String encodedId = encodeId(urlModel.id());
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new UrlResponseDTO(encodedId, urlModel.url(), urlModel.expire(), urlModel.ttl(),
-                        buildFinalUrl(headers, encodedId)));
-    }
 
-    private String encodeId(Long id) {
-        return hashids.encode(id);
-    }
-
-    private String buildFinalUrl(Map<String, String> headers, String encodedId) {
-        
-        if (headers.containsKey("host")) {
-            return headers.get("host") + "/%s".formatted(encodedId);
-        }
-        return "%s/%s".formatted(LOCAL_HOST, encodedId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(urlModel);
     }
 
     private long decodeId(final String id) {

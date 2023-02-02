@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import dev.pgjbz.urlshorter.app.http.dto.request.UrlRequestDTO;
-import dev.pgjbz.urlshorter.app.http.dto.response.UrlResponseDTO;
+import dev.pgjbz.urlshorter.domain.model.Url;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -54,7 +54,7 @@ public interface UrlController {
                             """)) })
     })
 
-    ResponseEntity<UrlResponseDTO> create(@RequestBody final UrlRequestDTO url,
+    ResponseEntity<Url> create(@RequestBody final UrlRequestDTO url,
             @RequestHeader final Map<String, String> headers);
 
     @GetMapping(value = "/{id}")
