@@ -27,10 +27,10 @@ services:
     - ID_SALT=ultramegablastpowerfullsalt
     ports:
     - "8080:8080"
-    networks:
-    - app
     depends_on:
     - postgres
+    networks:
+    - app
 
   prometheus:
     image: prom/prometheus:v2.42.0
@@ -42,6 +42,22 @@ services:
     - "host.docker.internal:host-gateway"
     ports:
     - "9090:9090" 
+    networks:
+    - app
+
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+    - "3000:3000"
+    environment:
+    - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+    - GF_AUTH_ANONYMOUS_ENABLED=true
+    - GF_AUTH_BASIC_ENABLED=false
+    - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    networks:
+    - app
+    
 
 
 networks:

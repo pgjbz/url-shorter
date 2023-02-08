@@ -25,5 +25,5 @@ scrape_configs:
     label_value_length_limit: 0
     static_configs:
     - targets:
-      - "host.docker.internal:8080"
-          # - "application:8080"
+      # - "host.docker.internal:8080"
+      - "application:8080"
