@@ -17,6 +17,9 @@ ratelimit:
   refresh-period: ${RATE_LIMIT_REFRESH_PERIOD:100}
   requests-per-period: ${RATE_LIMIT_REQUESTS_PER_PERIOD:50}
 
+url:
+  host-name: ${URL_SHORTER_HOST_NAME:localhost}
+
 management:
   health:
     diskspace:

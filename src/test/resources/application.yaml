@@ -11,6 +11,9 @@ spring:
 hashids:
   salt: url-shorter
 
+url:
+  host-name: ${URL_SHORTER_HOST_NAME:localhost}
+  
 ratelimit:
   timeout-duration: 500
   refresh-period: 100

@@ -1,7 +1,6 @@
 package dev.pgjbz.urlshorter.app.http.controller.serializer;
 
 import java.io.IOException;
-import java.net.InetAddress;
 
 import org.hashids.Hashids;
 import org.springframework.boot.jackson.JsonComponent;
@@ -10,6 +9,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
+import dev.pgjbz.urlshorter.app.configuration.props.UrlShorterProps;
 import dev.pgjbz.urlshorter.app.http.dto.response.UrlResponseDTO;
 import dev.pgjbz.urlshorter.domain.model.Url;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +18,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UrlSerializer extends JsonSerializer<Url> {
 
-
-    private static final String LOCAL_HOST = InetAddress.getLoopbackAddress().getHostName();
     private final Hashids hashids;
+    private final UrlShorterProps urlShorterProps;
     
     @Override
     public void serialize(Url urlModel, JsonGenerator gen, SerializerProvider serializers) throws IOException {
@@ -36,7 +35,7 @@ public class UrlSerializer extends JsonSerializer<Url> {
     }
 
     private String buildFinalUrl(String encodedId) {
-        return "%s/%s".formatted(LOCAL_HOST, encodedId);
+        return "%s/%s".formatted(urlShorterProps.hostName(), encodedId);
     }
 
 
