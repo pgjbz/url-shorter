@@ -16,6 +16,7 @@
 
 
 	<modules>
-		<module>shorter</module>
+		<module>url-shorter-api</module>
+		<module>url-request-consumer</module>
 	</modules>
 </project>
