@@ -6,12 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.jdbc.Sql;
 
 import dev.pgjbz.urlshorter.domain.model.Url;
 import dev.pgjbz.urlshorter.domain.repository.UrlRepository;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })
 public class UrlRepositoryITTest {
 
     @Autowired

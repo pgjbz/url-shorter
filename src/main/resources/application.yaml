@@ -8,6 +8,13 @@ spring:
     url: jdbc:postgresql://${PG_HOST:localhost}:${PG_PORT:5432}/${PG_DB:url-shorter}
     username: ${PG_USER:url-shorter}
     password: ${PG_PASS:url-shorter}
+  kafka:
+    producer:
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      key-serializer:
+        org.apache.kafka.common.serialization.StringSerializer
+      value-serializer:
+        org.apache.kafka.common.serialization.StringSerializer
 
 hashids:
   salt: ${ID_SALT:url-shorter}

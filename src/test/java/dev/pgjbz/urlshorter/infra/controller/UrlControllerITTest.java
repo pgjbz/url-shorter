@@ -8,12 +8,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.jdbc.Sql;
 
 import dev.pgjbz.urlshorter.app.http.dto.request.UrlRequestDTO;
 import dev.pgjbz.urlshorter.app.http.dto.response.UrlResponseDTO;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })
 public class UrlControllerITTest {
 
     @Autowired

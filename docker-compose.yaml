@@ -13,24 +13,25 @@ services:
     networks:
     - app
   
-  application:
-    container_name: url-shorter
-    build: 
-      context: .
-      dockerfile: ./Dockerfile
-    environment:
-    - PG_HOST=postgres
-    - PG_PORT=5432
-    - PG_DB=url-shorter
-    - PG_USER=url-shorter
-    - PG_PASS=url-shorter
-    - ID_SALT=ultramegablastpowerfullsalt
-    ports:
-    - "8080:8080"
-    depends_on:
-    - postgres
-    networks:
-    - app
+  # application:
+  #   image: url-shorter
+  #   container_name: url-shorter
+  #   build: 
+  #     context: .
+  #     dockerfile: ./Dockerfile
+  #   environment:
+  #   - PG_HOST=postgres
+  #   - PG_PORT=5432
+  #   - PG_DB=url-shorter
+  #   - PG_USER=url-shorter
+  #   - PG_PASS=url-shorter
+  #   - ID_SALT=ultramegablastpowerfullsalt
+  #   ports:
+  #   - "8080:8080"
+  #   depends_on:
+  #   - postgres
+  #   networks:
+  #   - app
 
   prometheus:
     image: prom/prometheus:v2.42.0
@@ -58,8 +59,76 @@ services:
     networks:
     - app
     
+  zookeeper:
+    image: confluentinc/cp-zookeeper:6.1.9
+    healthcheck:
+      interval: 120ms
+      retries: 5
+      start_period: 60ms
+      test: |
+        touch /tmp/healthcheck.txt &&
+        mkdir /tmp/healthcheck &&
+        mv /tmp/healthcheck.txt /tmp/healthcheck &&
+        cd /tmp/healthcheck &&
+        echo "hello my docker container is working fine" >> healthcheck.txt &&
+        cat healthcheck.txt &&
+        rm healthcheck.txt &&
+        cd .. &&
+        rmdir /tmp/healthcheck
+        cls
+      timeout: 30ms
+    environment:
+    - ZOOKEEPER_SERVER_ID=1
+    - ZOOKEEPER_CLIENT_PORT=2181
+    - ZOOKEEPER_TICK_TIMES=2000
+    - ZOOKEEPER_SYNC_LIMIT=2
+    ports:
+    - 2181:2181
+    networks:
+    - app
 
+  kafka:
+    image: confluentinc/cp-kafka:6.1.9
+    healthcheck:
+      interval: 120ms
+      retries: 5
+      start_period: 60ms
+      test: |
+        touch /tmp/healthcheck.txt &&
+        mkdir /tmp/healthcheck &&
+        mv /tmp/healthcheck.txt /tmp/healthcheck &&
+        cd /tmp/healthcheck &&
+        echo "hello my docker container is working fine" >> healthcheck.txt &&
+        cat healthcheck.txt &&
+        rm healthcheck.txt &&
+        cd .. &&
+        rmdir /tmp/healthcheck
+        cls
+      timeout: 30ms
+    environment:
+    - KAFKA_BROKER_ID=1
+    - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+    - KAFKA_ADVERTISED_LISTENERS=LISTENER_DOCKER_INTERNAL://kafka:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+    - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+    - KAFKA_INTER_BROKER_LISTENER_NAME=LISTENER_DOCKER_INTERNAL
+    - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    ports:
+    - 9092:9092
+    depends_on:
+    - zookeeper
+    networks:
+    - app
 
+  redpanda:
+    image: docker.redpanda.com/vectorized/console:latest
+    environment:
+    - KAFKA_BROKERS=kafka:9092
+    depends_on:
+    - kafka
+    networks:
+    - app
+    ports:
+    - 8081:8080
 networks:
   app:
   
