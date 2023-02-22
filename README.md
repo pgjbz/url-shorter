@@ -79,3 +79,5 @@ Goals:
 - [ ] Link URL to user
 - [ ] Fetch all url from user
 - [ ] Delete url
+- [ ] Send url requests to queue
+- [ ] Save requests async
