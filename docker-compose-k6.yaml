@@ -16,7 +16,7 @@ services:
   application:
     build: 
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./shorter/Dockerfile
     environment:
     - PG_HOST=postgres
     - PG_PORT=5432

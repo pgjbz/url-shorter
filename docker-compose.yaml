@@ -13,7 +13,7 @@ services:
     networks:
     - app
   
-  # application:
+  # shorter:
   #   image: url-shorter
   #   container_name: url-shorter
   #   build: 
