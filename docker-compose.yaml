@@ -37,7 +37,7 @@ services:
   #   image: prom/prometheus:v2.42.0
   #   container_name: prometheus
   #   volumes:
-  #   - "./src/main/resources/prometheus.yaml:/etc/prometheus/prometheus.yaml"
+  #   - "./prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml"
   #   command: "--config.file=/etc/prometheus/prometheus.yaml"
   #   extra_hosts:
   #   - "host.docker.internal:host-gateway"
