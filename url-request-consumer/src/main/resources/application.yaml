@@ -1,0 +1,16 @@
+
+spring:
+  application:
+    name: Url request consumer
+  datasource:
+    url: jdbc:postgresql://${PG_HOST:localhost}:${PG_PORT:5432}/${PG_DATABASE:url-shorter}
+    username: ${PG_USERNAME:url-shorter}
+    password: ${PG_PASSWORD:url-shorter}
+  kafka:
+    consumer:
+      client-id: url-request-consumer
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      key-deserializer:
+        org.apache.kafka.common.serialization.StringSerializer
+      value-deserializer:
+        org.apache.kafka.common.serialization.StringSerializer
