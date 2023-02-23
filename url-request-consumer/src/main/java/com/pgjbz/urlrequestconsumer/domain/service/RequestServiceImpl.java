@@ -16,7 +16,7 @@ public final class RequestServiceImpl implements RequestService {
 
     @Override
     public void save(Request request) {
-        jsonService.serialize(request)
+        jsonService.serialize(request.headers())
             .ifPresent(json -> requestRepository.save(json, request.urlId()));
     }
 
