@@ -14,3 +14,6 @@ spring:
         org.apache.kafka.common.serialization.StringSerializer
       value-deserializer:
         org.apache.kafka.common.serialization.StringSerializer
+
+  flyway:
+    schemas: requests
