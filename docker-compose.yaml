@@ -33,18 +33,18 @@ services:
   #   networks:
   #   - app
 
-  prometheus:
-    image: prom/prometheus:v2.42.0
-    container_name: prometheus
-    volumes:
-    - "./src/main/resources/prometheus.yaml:/etc/prometheus/prometheus.yaml"
-    command: "--config.file=/etc/prometheus/prometheus.yaml"
-    extra_hosts:
-    - "host.docker.internal:host-gateway"
-    ports:
-    - "9090:9090" 
-    networks:
-    - app
+  # prometheus:
+  #   image: prom/prometheus:v2.42.0
+  #   container_name: prometheus
+  #   volumes:
+  #   - "./src/main/resources/prometheus.yaml:/etc/prometheus/prometheus.yaml"
+  #   command: "--config.file=/etc/prometheus/prometheus.yaml"
+  #   extra_hosts:
+  #   - "host.docker.internal:host-gateway"
+  #   ports:
+  #   - "9090:9090" 
+  #   networks:
+  #   - app
 
 
   grafana:
