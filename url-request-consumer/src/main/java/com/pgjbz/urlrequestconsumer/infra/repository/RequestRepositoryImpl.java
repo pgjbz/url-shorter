@@ -5,7 +5,6 @@ import java.util.Map;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.pgjbz.urlrequestconsumer.domain.model.Request;
 import com.pgjbz.urlrequestconsumer.domain.repository.RequestRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ public class RequestRepositoryImpl implements RequestRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public void save(Request request) {
+    public void save(final String headers, final Long urlId) {
         final String insert = """
                 insert into requests.tb_requests(
                     url_id,
@@ -29,8 +28,7 @@ public class RequestRepositoryImpl implements RequestRepository {
                     :headers::json
                 )
                 """;
-        final Map<String, String> headers = request.headers();
-        final Map<String, Object> values = Map.of("headers", headers, "urlId", request.urlId());
+        final Map<String, Object> values = Map.of("headers", headers, "urlId", urlId);
         try {
             log.info("inserting headers: {}", headers);
             jdbcTemplate.update(insert, values);
@@ -39,6 +37,5 @@ public class RequestRepositoryImpl implements RequestRepository {
             throw e;
         }
     }
-
 
 }

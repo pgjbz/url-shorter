@@ -1,5 +1,6 @@
 package dev.pgjbz.urlshorter.infra.service;
 
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,8 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void sendMessage(final String target, final String message) {
         log.info("send message '{}' to topic '{}'", message, target);
-        kafkaTemplate.send(target, message);
+        final ProducerRecord<String, String> producerRecord = new ProducerRecord<>(target, message);
+        kafkaTemplate.send(producerRecord);
     }
 
 }
