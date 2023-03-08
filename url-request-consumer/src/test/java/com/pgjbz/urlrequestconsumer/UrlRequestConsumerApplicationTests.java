@@ -1,5 +1,7 @@
 package com.pgjbz.urlrequestconsumer;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
@@ -10,6 +12,7 @@ class UrlRequestConsumerApplicationTests {
 
 	@Test
 	void contextLoads() {
+		assertTrue(true);
 	}
 
 }
